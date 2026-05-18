@@ -1,4 +1,10 @@
-# Netlify SPA fallback — every URL that doesn't map to a built file is served
-# `index.html`, so React Router can take over client-side. Without this, deep
-# links like /blog, /admin, /blog/<slug> all 404 on a fresh page load.
-/*    /index.html   200
+# ─────────────────────────────────────────────────────────────────────
+# Netlify redirects (order matters — first match wins).
+# ─────────────────────────────────────────────────────────────────────
+
+# Live sitemap.xml served by netlify/functions/sitemap.js
+/sitemap.xml    /.netlify/functions/sitemap    200
+
+# SPA fallback — every other path is served index.html so React Router
+# can take over client-side. Must be LAST.
+/*              /index.html                    200

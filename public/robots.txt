@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+# Sitemap (live, regenerated on every request from Supabase)
+Sitemap: https://mediahubaccess.com/sitemap.xml
