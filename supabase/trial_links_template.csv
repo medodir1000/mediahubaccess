@@ -1,0 +1,11 @@
+m3u_url,portal_url,username,password,batch_label,provider,max_uses,valid_until,notes
+http://REPLACE-WITH-REAL-PROVIDER.com:8080/get.php?username=trial_001&password=xKp9vL2&type=m3u_plus,,,,,,,,
+http://REPLACE-WITH-REAL-PROVIDER.com:8080/get.php?username=trial_002&password=mB4xZ7q&type=m3u_plus,,,,,,,,
+http://REPLACE-WITH-REAL-PROVIDER.com:8080/get.php?username=trial_003&password=fG8nR3w&type=m3u_plus,,,,,,,,
+http://REPLACE-WITH-REAL-PROVIDER.com:8080/get.php?username=trial_004&password=dY3mQ8s&type=m3u_plus,,,,,,,,
+http://REPLACE-WITH-REAL-PROVIDER.com:8080/get.php?username=trial_005&password=hN7tR2k&type=m3u_plus,,,,,,,,
+http://REPLACE-WITH-BACKUP-PROVIDER.com:25461/get.php?username=test_aa&password=qZ1wX5t&type=m3u_plus,,,,,,,,
+http://REPLACE-WITH-BACKUP-PROVIDER.com:25461/get.php?username=test_bb&password=jH6cV9p&type=m3u_plus,,,,,,,,
+http://REPLACE-WITH-BACKUP-PROVIDER.com:25461/get.php?username=test_cc&password=eL5oP3w&type=m3u_plus,,,,,,,,
+http://REPLACE-WITH-BACKUP-PROVIDER.com:25461/get.php?username=test_dd&password=rT9bM4z&type=m3u_plus,,,,,,,,
+http://REPLACE-WITH-BACKUP-PROVIDER.com:25461/get.php?username=test_ee&password=sV6kJ8c&type=m3u_plus,,,,,,,,

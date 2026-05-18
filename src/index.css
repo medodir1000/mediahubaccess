@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand accents stay the same. */
+  --color-luxury-gold: #D4AF37;
+  --color-electric-blue: #3B82F6;
+
+  /* Previously near-black; now near-white so every existing `bg-deep-black`
+     / `bg-charcoal` class flips to a light surface site-wide. */
+  --color-deep-black: #f7f8fb;
+  --color-charcoal:   #ffffff;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-[var(--color-deep-black)] text-zinc-900 font-sans antialiased
+           selection:bg-luxury-gold selection:text-black;
+  }
+
+  /* Headings stay nice and dark on light bg. */
+  h1, h2, h3, h4, h5, h6 { color: #0b1220; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LIGHT-THEME SURFACE OVERRIDES
+   The codebase was built dark-first; here we re-map only the surface utilities
+   (backgrounds + borders) to light. Text colors stay untouched so that buttons
+   like `bg-electric-blue text-white` keep their proper contrast.
+   ───────────────────────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Common translucent-dark backgrounds → light translucent. */
+  .bg-black\/40    { background-color: rgba(15, 23, 42, 0.04) !important; }
+  .bg-black\/50    { background-color: rgba(15, 23, 42, 0.05) !important; }
+  .bg-black\/60    { background-color: rgba(15, 23, 42, 0.06) !important; }
+
+  .bg-white\/5     { background-color: rgba(15, 23, 42, 0.04) !important; }
+  .bg-white\/10    { background-color: rgba(15, 23, 42, 0.06) !important; }
+  .bg-white\/\[0\.02\], .bg-white\/\[0\.03\], .bg-white\/\[0\.05\]
+                   { background-color: rgba(15, 23, 42, 0.03) !important; }
+
+  /* Translucent-white borders → subtle zinc on light. */
+  .border-white\/5,
+  .border-white\/10,
+  .border-white\/20 { border-color: rgba(15, 23, 42, 0.10) !important; }
+
+  /* Boost readability of muted greys on the new light surface — every
+     "designed for dark bg" shade is re-mapped to a readable equivalent on
+     light. */
+  .text-zinc-100 { color: #1e293b !important; }
+  .text-zinc-200 { color: #334155 !important; }
+  .text-zinc-300 { color: #475569 !important; }
+  .text-zinc-400 { color: #64748b !important; }
+  .text-zinc-500 { color: #6b7280 !important; }
+  .text-zinc-600 { color: #94a3b8 !important; }
+  /* But keep the “darkest greys” actually dark — they're used for buttons/badges
+     where dark fill is intended. */
+  .bg-zinc-900, .bg-zinc-800, .bg-zinc-700 { color-scheme: dark; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   text-white: default to dark on the new light theme, BUT keep true white
+   when it sits on a colored button/badge background. This single rule
+   replaces the per-component edits that would otherwise be needed across
+   ~30 dark-first components.
+   ───────────────────────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Default — every `text-white` becomes dark zinc. */
+  .text-white { color: #0f172a !important; }
+
+  /* Exception #1 — colored buttons/badges keep true white for contrast. */
+  [class*="bg-electric-blue"].text-white,
+  [class*="bg-blue-"].text-white,
+  [class*="bg-green-"].text-white,
+  [class*="bg-red-"].text-white,
+  [class*="bg-rose-"].text-white,
+  [class*="bg-purple-"].text-white,
+  [class*="bg-amber-"].text-white,
+  [class*="bg-indigo-"].text-white,
+  [class*="bg-emerald-"].text-white,
+  [class*="bg-orange-"].text-white,
+  [class*="bg-yellow-"].text-white,
+  [class*="bg-cyan-"].text-white,
+  [class*="bg-pink-"].text-white,
+  [class*="bg-violet-"].text-white,
+  [class*="bg-fuchsia-"].text-white,
+  [class*="bg-slate-7"].text-white,
+  [class*="bg-slate-8"].text-white,
+  [class*="bg-slate-9"].text-white,
+  [class*="bg-zinc-7"].text-white,
+  [class*="bg-zinc-8"].text-white,
+  [class*="bg-zinc-9"].text-white,
+  [class*="bg-gradient"].text-white,
+  [class*="bg-luxury"].text-white {
+    color: #ffffff !important;
+  }
+
+  /* Exception #2 — when `text-white` is a hover state on an interactive
+     element, let it switch to electric-blue for a clean light-theme hover. */
+  .hover\:text-white:hover { color: #1d4ed8 !important; }
+}
+
+.glass-card {
+  @apply bg-white/85 backdrop-blur-xl border border-zinc-200 shadow-sm;
+}
+
+.gold-gradient {
+  @apply bg-clip-text text-transparent bg-linear-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728];
+}
+
+.blue-gradient {
+  @apply bg-clip-text text-transparent bg-linear-to-r from-electric-blue to-blue-400;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+@keyframes float {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-20px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite alternate;
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+}
+
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(15, 23, 42, 0.18); border-radius: 9999px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(15, 23, 42, 0.30); }
+
+/* Admin form inputs — re-themed for the light layout. */
+.form-input {
+  @apply w-full px-4 py-2.5 bg-white border border-zinc-300 rounded-xl
+         text-zinc-900 text-sm placeholder:text-zinc-400
+         focus:outline-none focus:border-electric-blue/70 focus:ring-2 focus:ring-electric-blue/20
+         transition-colors;
+}
+textarea.form-input { @apply leading-relaxed; }
+select.form-input  { @apply appearance-none cursor-pointer; }

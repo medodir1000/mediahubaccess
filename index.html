@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="MediaHubAccess - Universal 4K Digital Streaming. Global License Authorization Network with 20Gbps fiber-grade nodes." />
+
+    <!-- Favicons (modern browsers use SVG; .ico fallback served by browser default) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/svg+xml" href="/icon.svg" />
+
+    <!-- iOS / Safari -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="MediaHub" />
+
+    <!-- PWA / Android -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#050505" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#3B82F6" media="(prefers-color-scheme: light)" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Open Graph / social previews -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="MediaHubAccess - Universal 4K Digital Streaming" />
+    <meta property="og:description" content="Global License Authorization Network. 4K UHD, 50FPS, zero drops." />
+    <meta property="og:image" content="/apple-touch-icon.svg" />
+    <meta name="twitter:card" content="summary" />
+
+    <title>MediaHubAccess - Universal 4K Digital Streaming</title>
+    <script>
+      // Fix for "Cannot set property fetch of #<Window> which has only a getter"
+      // This happens if a library tries to polyfill fetch in an environment where it's read-only.
+      (function() {
+        try {
+          const property = 'fetch';
+          const descriptor = Object.getOwnPropertyDescriptor(window, property) || 
+                             Object.getOwnPropertyDescriptor(Object.getPrototypeOf(window), property);
+          
+          if (descriptor && (!descriptor.writable || descriptor.get) && descriptor.configurable) {
+            Object.defineProperty(window, property, {
+              value: window[property],
+              writable: true,
+              configurable: true,
+              enumerable: true
+            });
+          }
+        } catch (e) {
+          console.debug('Failed to make fetch writable:', e);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

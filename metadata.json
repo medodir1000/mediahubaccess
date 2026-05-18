@@ -1,0 +1,8 @@
+{
+  "name": "MediaHubAccess",
+  "description": "Premium 4K digital streaming access worldwide with 65,000+ channels and 120,000+ movies. Experience zero buffering and ultra-stable global node activation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

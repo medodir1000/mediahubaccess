@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MediaHubAccess">
+  <defs>
+    <linearGradient id="fvBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1E3A8A"/>
+    </linearGradient>
+  </defs>
+  <!-- Simplified for 16x16 legibility: solid shield + play, single gold dot, no fine arcs -->
+  <rect width="64" height="64" rx="14" fill="url(#fvBg)"/>
+  <path d="M32 10 L50 16 V31 C50 41 42.5 49 32 53 C21.5 49 14 41 14 31 V16 Z" fill="#FFFFFF"/>
+  <path d="M27 24 V41 L42 32.5 Z" fill="#1E3A8A"/>
+  <circle cx="49" cy="14" r="6" fill="#D4AF37" stroke="#050505" stroke-opacity="0.4" stroke-width="1"/>
+</svg>

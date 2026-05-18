@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="MediaHubAccess">
+  <defs>
+    <linearGradient id="atBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1E3A8A"/>
+    </linearGradient>
+    <linearGradient id="atGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCF6BA"/>
+      <stop offset="55%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#BF953F"/>
+    </linearGradient>
+    <linearGradient id="atShield" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E5EDFF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- iOS applies its own rounded mask, but we include rounded corners for older systems -->
+  <rect width="180" height="180" rx="40" fill="url(#atBg)"/>
+  <rect x="1.5" y="1.5" width="177" height="177" rx="38.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="1.5"/>
+  <path d="M40 12 H140 Q170 12 170 42 V62 Q110 40 10 62 V42 Q10 12 40 12 Z" fill="#FFFFFF" fill-opacity="0.06"/>
+
+  <!-- Shield (scaled from 64→180 viewBox) -->
+  <g transform="translate(90 90) scale(2.8125) translate(-32 -32)">
+    <path d="M32 9 L50.5 15 V31 C50.5 41.5 42.8 50 32 54.5 C21.2 50 13.5 41.5 13.5 31 V15 Z"
+          fill="url(#atShield)"/>
+    <path d="M28 25 V40 L41 32.5 Z" fill="url(#atBg)"/>
+    <path d="M24.5 21 Q32 17 39.5 21" stroke="#1E40AF" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.55"/>
+  </g>
+
+  <!-- Gold badge (top-right, proportional to 180 viewBox) -->
+  <circle cx="138" cy="40" r="21" fill="url(#atGold)"/>
+  <circle cx="138" cy="40" r="21" fill="none" stroke="#050505" stroke-opacity="0.35" stroke-width="2.5"/>
+  <path d="M128 40 L135.5 47.5 L148.5 33.5" stroke="#050505" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
