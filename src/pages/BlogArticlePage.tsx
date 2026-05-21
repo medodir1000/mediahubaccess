@@ -32,7 +32,18 @@ type Article = {
   published_at: string | null;
   cta_text: string | null;
   cta_url: string | null;
+  // JSON-LD structured data emitted by the auto-writer for rich snippets.
+  // Stored as jsonb in Supabase, rendered as <script type="application/ld+json">
+  // tags below. Null when the article doesn't qualify (e.g. HowTo is conditional).
+  faq_jsonld: Record<string, unknown> | null;
+  howto_jsonld: Record<string, unknown> | null;
 };
+
+// Defense-in-depth: even though faq_jsonld / howto_jsonld are server-validated,
+// escape `</script>` sequences so a future injection can't break out of the tag.
+function safeJsonLd(obj: unknown): string {
+  return JSON.stringify(obj).replace(/<\/script/gi, '<\\/script');
+}
 
 const SITE_ORIGIN = 'https://mediahubaccess.com';
 const DEFAULT_CTA_TEXT = 'Chat on WhatsApp — Free 12h Test';
@@ -47,7 +58,7 @@ export default function BlogArticlePage() {
     (async () => {
       const { data, error } = await supabase
         .from('articles')
-        .select('id, slug, title, subtitle, excerpt, body_markdown, body_html, cover_image_url, category, tags, hashtags, seo_title, seo_description, seo_keywords, og_image_url, og_description, canonical_url, read_time_min, reading_minutes, published_at, cta_text, cta_url')
+        .select('id, slug, title, subtitle, excerpt, body_markdown, body_html, cover_image_url, category, tags, hashtags, seo_title, seo_description, seo_keywords, og_image_url, og_description, canonical_url, read_time_min, reading_minutes, published_at, cta_text, cta_url, faq_jsonld, howto_jsonld')
         .eq('slug', slug)
         .eq('status', 'published')
         .single();
@@ -121,8 +132,8 @@ export default function BlogArticlePage() {
         <meta name="twitter:title" content={seoTitle} />
         <meta name="twitter:description" content={seoDesc} />
         <meta name="twitter:image" content={ogImage} />
-        {/* JSON-LD */}
-        <script type="application/ld+json">{JSON.stringify({
+        {/* JSON-LD — BlogPosting (always) */}
+        <script type="application/ld+json">{safeJsonLd({
           '@context': 'https://schema.org',
           '@type': 'BlogPosting',
           headline: seoTitle,
@@ -132,6 +143,14 @@ export default function BlogArticlePage() {
           mainEntityOfPage: canonical,
           publisher: { '@type': 'Organization', name: 'MediaHubAccess', logo: { '@type': 'ImageObject', url: `${SITE_ORIGIN}/apple-touch-icon.svg` } },
         })}</script>
+        {/* JSON-LD — FAQPage (when the auto-writer extracted Q&A) */}
+        {article.faq_jsonld && (
+          <script type="application/ld+json">{safeJsonLd(article.faq_jsonld)}</script>
+        )}
+        {/* JSON-LD — HowTo (only on operational guides — server emits null otherwise) */}
+        {article.howto_jsonld && (
+          <script type="application/ld+json">{safeJsonLd(article.howto_jsonld)}</script>
+        )}
       </Helmet>
 
       <div className="min-h-screen bg-zinc-50 text-zinc-900">
