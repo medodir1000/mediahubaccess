@@ -18,6 +18,7 @@ import AdminAnalyticsPage from './pages/AdminAnalyticsPage';
 import AdminBotSettingsPage from './pages/AdminBotSettingsPage';
 import AdminArticleBotPage from './pages/AdminArticleBotPage';
 import AdminRedditScoutPage from './pages/AdminRedditScoutPage';
+import AdminPinterestPinsPage from './pages/AdminPinterestPinsPage';
 import RequireAuth from './components/RequireAuth';
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="bot" element={<AdminBotSettingsPage />} />
           <Route path="article-bot" element={<AdminArticleBotPage />} />
           <Route path="reddit" element={<AdminRedditScoutPage />} />
+          <Route path="pinterest-pins" element={<AdminPinterestPinsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

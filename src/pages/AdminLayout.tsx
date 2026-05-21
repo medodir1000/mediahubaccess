@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, Users, Settings, LogOut, BarChart3, Radio, Sparkles, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, FileText, Users, Settings, LogOut, BarChart3, Radio, Sparkles, MessageSquare, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import BrandMark from '../components/BrandMark';
 
@@ -12,6 +12,7 @@ const navItems = [
   { to: '/admin/bot',         label: 'WhatsApp Bot',  icon: Settings },
   { to: '/admin/article-bot', label: 'Article Bot',   icon: Sparkles },
   { to: '/admin/reddit',      label: 'Reddit Scout',  icon: MessageSquare },
+  { to: '/admin/pinterest-pins', label: 'Pinterest Pins', icon: ImageIcon },
 ];
 
 export default function AdminLayout() {
