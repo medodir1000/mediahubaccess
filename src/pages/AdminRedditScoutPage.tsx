@@ -33,6 +33,11 @@ export default function AdminRedditScoutPage() {
   const [busy, setBusy] = useState<Record<string, boolean>>({});
   const [copied, setCopied] = useState<string | null>(null);
   const [edits, setEdits] = useState<Record<string, string>>({});
+  // Cards in the "I just opened the Reddit tab — confirm whether you posted" state.
+  // Keyed by draft id. Set when the user clicks "Copy + Open Post"; cleared on
+  // either confirmation ("Posted Manually") or "Cancel" (returns the card to
+  // its normal pending state so the user can try again later).
+  const [awaiting, setAwaiting] = useState<Record<string, boolean>>({});
 
   async function load() {
     const q = supabase
@@ -110,7 +115,36 @@ export default function AdminRedditScoutPage() {
 
   function openAndCopy(d: Draft) {
     copyReply(d);
-    window.open(d.post_url, '_blank', 'noopener,noreferrer');
+    // Append a semantic hint that this URL is being opened to comment. Reddit
+    // itself doesn't interpret the param, but it (a) clearly tags the tab,
+    // (b) won't break anything, and (c) gives us a hook to do real auto-focus
+    // later if we ever ship a browser extension.
+    const sep = d.post_url.includes('?') ? '&' : '?';
+    window.open(`${d.post_url}${sep}focus=comment`, '_blank', 'noopener,noreferrer');
+    // Flip the card into "awaiting confirmation" mode — the user posts on
+    // Reddit, comes back, and clicks one button to confirm.
+    setAwaiting((a) => ({ ...a, [d.id]: true }));
+  }
+
+  function cancelAwaiting(d: Draft) {
+    // User aborted the post (e.g. Reddit was down, or they decided to edit
+    // first). Drop the awaiting flag; draft stays in `pending`.
+    setAwaiting((a) => {
+      const next = { ...a };
+      delete next[d.id];
+      return next;
+    });
+  }
+
+  async function confirmPosted(d: Draft) {
+    // Run the existing status flip; clear awaiting state regardless of
+    // success/failure (setStatus already shows an alert on error).
+    await setStatus(d, 'posted');
+    setAwaiting((a) => {
+      const next = { ...a };
+      delete next[d.id];
+      return next;
+    });
   }
 
   return (
@@ -120,7 +154,7 @@ export default function AdminRedditScoutPage() {
           <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-zinc-600">Traffic · Reddit</p>
           <h1 className="text-4xl font-black tracking-tighter mt-1">Reddit Scout</h1>
           <p className="text-zinc-500 text-sm mt-1">
-            AI-drafted replies waiting for human review. Open the post, paste the reply, post it from your own Reddit session — then mark as posted.
+            AI-drafted replies waiting for human review. Click <strong>Copy + Open Post</strong>, paste on Reddit, submit — then confirm with the green button. Keeps every post a real human action (Reddit ToS compliant, zero ban risk).
           </p>
         </div>
         <button
@@ -182,7 +216,15 @@ export default function AdminRedditScoutPage() {
 
       <div className="space-y-4">
         {filtered.map((d) => (
-          <div key={d.id} className="glass-card rounded-2xl p-6 space-y-4">
+          <div
+            key={d.id}
+            className={
+              "glass-card rounded-2xl p-6 space-y-4 transition-all " +
+              (awaiting[d.id]
+                ? "ring-2 ring-green-400 shadow-[0_0_30px_rgba(74,222,128,0.25)] bg-green-50/30"
+                : "")
+            }
+          >
             {/* Header */}
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div className="min-w-0 flex-1">
@@ -250,7 +292,7 @@ export default function AdminRedditScoutPage() {
 
             {/* Actions */}
             <div className="flex flex-wrap items-center gap-2">
-              {d.status === 'pending' && (
+              {d.status === 'pending' && !awaiting[d.id] && (
                 <>
                   <button
                     type="button"
@@ -288,6 +330,41 @@ export default function AdminRedditScoutPage() {
                     Reject
                   </button>
                 </>
+              )}
+              {/* "Awaiting confirmation" overlay row — replaces the normal
+                  actions while the user is over on Reddit posting. Once they
+                  return and click "Posted Manually", the row flips to posted
+                  and disappears from the pending tab on next refresh. */}
+              {d.status === 'pending' && awaiting[d.id] && (
+                <div className="w-full flex flex-col sm:flex-row sm:items-center gap-3 bg-gradient-to-r from-green-50 via-green-100 to-green-50 border-2 border-green-400 rounded-xl px-4 py-3 animate-[fadeIn_0.2s_ease-out]">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-black text-green-800 leading-tight">
+                      Reply copied · post tab opened
+                    </p>
+                    <p className="text-xs text-green-700/80 leading-snug mt-0.5">
+                      Paste with <kbd className="px-1.5 py-0.5 bg-white border border-green-300 rounded text-[10px] font-mono font-bold">Ctrl</kbd>+<kbd className="px-1.5 py-0.5 bg-white border border-green-300 rounded text-[10px] font-mono font-bold">V</kbd> on Reddit, hit Submit, then confirm here.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      disabled={busy[d.id]}
+                      onClick={() => confirmPosted(d)}
+                      className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 !text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow-[0_4px_12px_rgba(22,163,74,0.35)] disabled:opacity-50 transition"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      {busy[d.id] ? 'Saving…' : 'Posted Manually'}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy[d.id]}
+                      onClick={() => cancelAwaiting(d)}
+                      className="inline-flex items-center gap-1.5 bg-white border border-zinc-300 hover:border-zinc-400 text-zinc-700 font-bold px-3 py-2.5 rounded-xl text-xs disabled:opacity-50 transition"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
               )}
               {d.status === 'posted' && (
                 <span className="text-xs text-green-700 inline-flex items-center gap-1.5 font-bold">
